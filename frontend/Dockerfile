@@ -1,20 +1,18 @@
-FROM node:current-alpine3.16  as build-stage
+FROM node:22-alpine3.19  
+
 
 WORKDIR /app
-ENV API_URL http://nodeapi-env.eba-nmpx3itx.us-east-1.elasticbeanstalk.com
-COPY package.json .
+
+# Copy package.json and package-lock.json to the working directory
+COPY package*.json ./
+# Install dependencies
 RUN npm install
+
+# Copy the rest of the application code to the working directory
 COPY . .
 
+# Expose the port the app runs on
+EXPOSE 5173
 
-RUN npm run build
-
-
-FROM nginx:1.17.0-alpine
-
-COPY --from=build-stage /app/dist /usr/share/nginx/html
-COPY default.conf /etc/nginx/conf.d/default.conf
-EXPOSE 80
-ENV API_URL http://lb-2-1187940550.us-east-1.elb.amazonaws.com
-RUN sed -i "s|{{API_URL}}|$API_URL|g" /etc/nginx/conf.d/default.conf
-CMD nginx -g 'daemon off;'
+# Command to run the app in development mode
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "5173"]
