@@ -6,18 +6,16 @@ jobs:
       - image: circleci/node:16  # Use a Node.js Docker image
     steps:
       - checkout  # Pull the latest code
-      
       # Install dependencies
       - run:
           name: Install Dependencies
           working_directory: ./backend
           command: npm install
-
       # Test the application (optional)
       - run:
           name: Test Application
           working_directory: ./backend
-          command: echo 'Testing the App'  # Use if you have test scripts, or remove this step
+          command: echo 'abc'  # Use if you have test scripts, or remove this step
 
   deploy-to-develop:
     docker:
@@ -56,7 +54,7 @@ workflows:
       - deploy-to-qa
       - approve-production-deploy:
           requires:
-            - deploy-to-qa  # Make sure QA deploy completes before approval
+            - deploy-to-qa  # Ensure QA deploy completes before approval
       - deploy-to-prod:
           requires:
-            - approve-production-deploy  # Deploy to production after approval
+            - approve-production-deploy  # Deploy to production only after approval
