@@ -1,0 +1,103 @@
+version: 2.1
+
+jobs:
+  backend-build-and-deploy:
+    docker:
+      - image: circleci/node:16  # Use a Node.js Docker image
+    steps:
+      - checkout  # Pull the latest code
+      
+      # Install dependencies
+      - run:
+          name: Install Dependencies
+          working_directory: ./backend
+          command: npm install
+
+      # Test the application (optional)
+      - run:
+          name: Test Application
+          working_directory: ./backend
+          command: echo 'abc'  # Use if you have test scripts, or remove this step
+
+      # Deploy to AWS EC2
+      - run:
+          name: Deploy to AWS EC2
+          command: |
+            ssh -o StrictHostKeyChecking=no ubuntu@100.27.212.246 \<<EOF
+              cd /var/www/backend
+              git pull origin circleci-project-setup
+              npm install
+              npm run start
+            EOF
+
+workflows:
+  build-and-deploy:
+    jobs:
+      - backend-build-and-deploy
+
+------------------------------------------------------------
+
+version: 2.1
+
+jobs:
+  backend-build-and-deploy:
+    docker:
+      - image: circleci/node:16  # Use a Node.js Docker image
+    steps:
+      - checkout  # Pull the latest code
+      
+      # Install dependencies
+      - run:
+          name: Install Dependencies
+          working_directory: ./backend
+          command: npm install
+
+      # Test the application (optional)
+      - run:
+          name: Test Application
+          working_directory: ./backend
+          command: echo 'abc'  # Use if you have test scripts, or remove this step
+
+  deploy-to-develop:
+    docker:
+      - image: circleci/node:16
+    steps:
+      - run:
+          name: Deploy to Develop
+          command: echo "Deploying to Develop environment..."
+
+  deploy-to-qa:
+    docker:
+      - image: circleci/node:16
+    steps:
+      - run:
+          name: Deploy to QA
+          command: echo "Deploying to QA environment..."
+
+  approve-production-deploy:
+    type: approval  # Approval step before production deployment
+    approval_timeout: 24h  # Timeout for approval (optional)
+
+  deploy-to-prod:
+    docker:
+      - image: circleci/node:16
+    steps:
+      - run:
+          name: Deploy to Production
+          command: echo "Deploying to Production environment..."
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - backend-build-and-deploy
+      - deploy-to-develop
+      - deploy-to-qa
+      - approve-production-deploy:
+          requires:
+            - deploy-to-qa  # Make sure QA deploy completes before approval
+      - deploy-to-prod:
+          requires:
+            - approve-production-deploy  # Deploy to production after approval
+
+
