@@ -17,7 +17,7 @@ jobs:
       - run:
           name: Test Application
           working_directory: ./backend
-          command: npm run dev  # Use if you have test scripts, or remove this step
+          command: rcho 'abc'  # Use if you have test scripts, or remove this step
 
       # Deploy to AWS EC2
       - run:
