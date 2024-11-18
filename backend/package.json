@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",      // or whatever your start command is
-    "dev": "nodemon server.js",     // if you want to use nodemon for development
-    "test": "jest"                  // assuming you're using Jest for testing
+    "start": "node server.js",     
+    "dev": "nodemon server.js",     
 
 },
   "keywords": [],
