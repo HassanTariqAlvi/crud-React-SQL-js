@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "pm2-runtime start ecosystem.config.js",
-    "stop": "pm2 delete all",
-    "restart": "pm2 restart all"
+    "start": "node server.js",      // or whatever your start command is
+    "dev": "nodemon server.js",     // if you want to use nodemon for development
+    "test": "jest"                  // assuming you're using Jest for testing
 
 },
   "keywords": [],
