@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   backend-build-and-deploy:
     docker:
-      - image: circleci/node:18  # Use a Node.js Docker image
+      - image: circleci/node:16  # Use a Node.js Docker image
     steps:
       - checkout  # Pull the latest code
       
@@ -21,7 +21,7 @@ jobs:
 
   deploy-to-develop:
     docker:
-      - image: circleci/node:18
+      - image: circleci/node:16
     steps:
       - run:
           name: Deploy to Develop
@@ -29,7 +29,7 @@ jobs:
 
   deploy-to-qa:
     docker:
-      - image: circleci/node:18
+      - image: circleci/node:16
     steps:
       - run:
           name: Deploy to QA
@@ -41,7 +41,7 @@ jobs:
 
   deploy-to-prod:
     docker:
-      - image: circleci/node:18
+      - image: circleci/node:16
     steps:
       - run:
           name: Deploy to Production
